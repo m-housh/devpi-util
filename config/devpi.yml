@@ -1,0 +1,16 @@
+global:
+    username: m.housh
+    password: Mjh063079
+
+hhe/dev:
+    index: /m.housh/dev
+    host: devpi.hhe.lan
+
+local:
+    host: localhost
+    port: 3141
+    scheme: http
+    index: /root/public
+    username: root
+    password: Mjh063079
+
