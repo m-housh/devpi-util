@@ -1,7 +1,7 @@
 import os
 from collections import namedtuple
 from .helpers import yaml_from_file, print_if_debug
-from .keys import environ_key as key
+from .environ_key import environ_key as key
 
 class Config:
     

@@ -12,7 +12,8 @@ EnvironKey = namedtuple('EnvrionKey',
         'password', 
         'requests_bundle', 
         'pip_target',
-        'tmp_path'])
+        'tmp_path']
+)
 
 environ_key = EnvironKey(
         host='DEVPI_HOST',

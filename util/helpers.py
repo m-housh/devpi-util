@@ -4,7 +4,7 @@ import os
 import subprocess
 from shutil import copytree, rmtree, ignore_patterns
 from tempfile import mkdtemp
-from .keys import environ_key
+from .environ_key import environ_key
 import yaml
 
 def is_debug():
