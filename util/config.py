@@ -1,5 +1,4 @@
 import os
-from collections import namedtuple
 from tempfile import mkdtemp
 from .helpers import yaml_from_file, print_if_debug
 # fix this if config2 works
@@ -53,12 +52,19 @@ class Config:
         return True
 
     def url(self):
-        index = self.index or '/'
-        if self._url:
-            if self.user && self.password:
+        if self._url is None:
+            index = self.index or '/'
+            if not index.startswith('/'):
+                index = '/' + index
+            print_if_debug(prefix='Config', message='Index: {}'.format(index))
+            print_if_debug(prefix='Config', message='User: {}, Password: {}'.format(
+                self.user, self.password))
+            if self.user and self.password:
+                print_if_debug(prefix='Config', message='Found username and pass')
                 return '{0}://{1}:{2}@{3}:{4}{5}'.format(
                         self.scheme, self.user, self.password, self.host, self.port, index)
-            return '{0}://{1}:{2}{3}'.format(self.scheme, self.host, self.port, index)
+            else:
+                return '{0}://{1}:{2}{3}'.format(self.scheme, self.host, self.port, index)
         return self._url
 
     def tmp_dir(self):
@@ -77,10 +83,15 @@ class Config:
 
     def load_directive(self, directive):
         if self.yaml:
+            _globals = self.yaml().get('global')
             _directive = self.yaml().get(directive)
             if _directive is None:
                 print_if_debug(prefix='Config', message="Could not find config directive for '{}'"\
                     .format(directive))
+            
+            if _globals is not None:  
+                for k, v in _globals.items():
+                    setattr(self, k, v)
 
             for k, v in _directive.items():
                 setattr(self, k, v)
