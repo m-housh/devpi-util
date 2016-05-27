@@ -15,10 +15,32 @@ def _is_debug():
     return False
 
 def print_if_debug(prefix='Main', message=None):
+    """ A utility wrapper for :py:method:`click.echo`.
+
+    Prints to the console if debug is True.
+    Prints format: [prefix]=> message
+
+    **Kwargs:**
+        * **prefix** (*str*):
+            A prefix to use for the command.  Defaults to 'Main'
+        * **message** (*str*):
+            The message to use for the command.
+    """
     if _is_debug():
         return click.echo('[{0}]=> {1}'.format(prefix, message))
 
 def yaml_from_file(path, directive=None):
+    """ Load yaml from a path and return it.
+        
+    **Args:**
+        * **path** (*str*):
+            A path to the yaml file to read.
+
+    **Kwargs:**
+        * **directive** (*str*):
+            A sub-key to read and return from the yaml file.
+    """
+
     if not os.path.isfile(path):
         return False
 
@@ -33,6 +55,7 @@ def yaml_from_file(path, directive=None):
     return data
 
 def _is_non_empty_dir(path):
+    """ Checks if a direcotry is empty or not. """
     if os.path.isdir(path):
         lst = os.listdir(path)
         if len(lst) > 0:

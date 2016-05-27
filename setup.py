@@ -13,6 +13,8 @@ setup(
         author='Michael Housh',
         author_email='mhoush@houshhomeenergy.com',
         url='https://github.com/m-housh/devpi-util',
+        description='Devpi Client Utility for Docker',
+        long_description=open('README.rst').read(),
         packages=find_packages(),
         zip_safe=False,
         install_requires=[

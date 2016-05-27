@@ -33,6 +33,7 @@ def cli():
 @click.option('--debug', envvar=environ_key.debug, default='1')
 @click.argument('devpi', nargs=-1)
 def fire(devpi, **kwargs):
+    """ Our main command-line entrypoint for the app. """
 
     os.environ['DEBUG'] = '0'
         
