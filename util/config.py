@@ -53,8 +53,12 @@ class Config:
         return True
 
     def url(self):
-        if self._url is None:
-            return '{0}://{1}:{2}/'.format(self.scheme, self.host, self.port)
+        index = self.index or '/'
+        if self._url:
+            if self.user && self.password:
+                return '{0}://{1}:{2}@{3}:{4}{5}'.format(
+                        self.scheme, self.user, self.password, self.host, self.port, index)
+            return '{0}://{1}:{2}{3}'.format(self.scheme, self.host, self.port, index)
         return self._url
 
     def tmp_dir(self):

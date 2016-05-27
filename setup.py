@@ -5,6 +5,7 @@ setup(
         version='0.1.0',
         author='Michael Housh',
         author_email='mhoush@houshhomeenergy.com',
+        url='https://github.com/m-housh/devpi-util',
         packages=find_packages(),
         zip_safe=False,
         install_requires=[
