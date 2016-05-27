@@ -1,0 +1,1 @@
+Search.setIndex({envversion:48,filenames:["index"],objects:{},objnames:{},objtypes:{},terms:{content:0,index:0,modul:0,page:0,search:0},titles:["Welcome to devpi-client-util&#8217;s documentation!"],titleterms:{client:0,devpi:0,document:0,indic:0,tabl:0,util:0,welcom:0}})
