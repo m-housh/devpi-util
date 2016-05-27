@@ -41,20 +41,27 @@ def fire(devpi, **kwargs):
     prepare_for_commands(config)
     
     print_if_debug('Main', message="Devpi: '{}'".format(devpi))
-    if 'devpi' in devpi:
-        print_if_debug('Main', message="Devpi found")
+        
+    if 'sh' in devpi:
+        subprocess.call(['sh'])
     else:
-        print_if_debug('Main', message="Devpi found")
-        devpi = ('devpi',) + devpi
 
-    config.export()
-    # connect to devpi-server at the url
-    subprocess.call(['devpi', 'use', config.url()])
-    # connect to an index before issuing commands
-    if config.index is not None or config.index != '':
-        subprocess.call(['devpi', 'use', config.index])
-    #subprocess.call(['sh', '/app/util/test.sh'])
-    subprocess.call(devpi)
+        if 'devpi' in devpi:
+            print_if_debug('Main', message="Devpi found")
+        else:
+            print_if_debug('Main', message="Devpi found")
+            devpi = ('devpi',) + devpi
+
+        config.export()
+        # connect to devpi-server at the url
+        subprocess.call(['devpi', 'use', config.url()])
+        # connect to an index before issuing commands
+        if config.index is not None or config.index != '':
+            subprocess.call(['devpi', 'use', config.index])
+        if config.password is not None or config.password != '':
+            subprocess.call(['devpi', 'login', '--password', config.password])
+        #subprocess.call(['sh', '/app/util/test.sh'])
+        subprocess.call(devpi)
 
     # cleanup before exit.
     cleanup()

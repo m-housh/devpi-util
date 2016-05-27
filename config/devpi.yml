@@ -7,7 +7,7 @@ hhe/dev:
     host: devpi.hhe.lan
 
 local:
-    host: localhost
+    host: devpi-server
     port: 3141
     scheme: http
     index: /root/public
