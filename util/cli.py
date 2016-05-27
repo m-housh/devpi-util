@@ -57,17 +57,21 @@ def fire(devpi, **kwargs):
         config.export()
         # connect to devpi-server at the url
         print_if_debug(prefix='Main', message='Connecting to devpi url: \'{}\''.format(config.url()))
-        subprocess.call(['devpi', 'use', config.url(), '1>&2>/dev/null'])
+
+        with open(os.devnull, 'w') as devnull:
+            subprocess.call(['devpi', 'use', config.url()], stdout=devnull, stderr=devnull)
         # connect to an index before issuing commands
         if config.index:
             print_if_debug('Main', 'Connecting to index: \'{}\''.format(config.index))
-            subprocess.call(['devpi', 'use', config.index, '1>&2>/dev/null'])
+            with open(os.devnull, 'w') as devnull:
+                subprocess.call(['devpi', 'use', config.index], stdout=devnull, stderr=devnull)
 
         if config.password:
             if config.user:
                 print_if_debug('Main', 'Attempting login...')
-                subprocess.call(['devpi', 'login', config.user, '--password', \
-                        config.password])
+                with open (os.devnull, 'w') as devnull:
+                    subprocess.call(['devpi', 'login', config.user, '--password', \
+                            config.password], stdout=devnull, stderr=devnull)
 
         #subprocess.call(['sh', '/app/util/test.sh'])
         subprocess.call(devpi)
