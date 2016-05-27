@@ -1,3 +1,10 @@
+"""
+    devpi-client-util.cli
+    =====================
+
+    Holds the command line commands for our application.
+
+"""
 import click
 import os
 import sys
@@ -7,6 +14,7 @@ from .config import Config
 from .environ_key import EnvironKey, environ_key
 from .helpers import print_if_debug, yaml_from_file, prepare_for_commands, cleanup
 
+#:TODO get rid of the group and just have one command.
 @click.group()
 def cli():
     pass

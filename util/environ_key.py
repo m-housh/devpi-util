@@ -1,3 +1,10 @@
+"""
+    devpi-client-util
+    =================
+
+    Holds environment keys for the application.
+
+"""
 from collections import namedtuple
 
 EnvironKey = namedtuple('EnvrionKey', 

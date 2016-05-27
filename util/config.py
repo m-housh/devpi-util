@@ -5,6 +5,18 @@ from .helpers import yaml_from_file, print_if_debug
 from .environ_key import key, environ_key
 
 class Config:
+    """ The main class for the application.  It stores config variables for a devpi-client
+    session.
+
+    Config options can be passed in via command line options or read in from a yaml type
+    file.
+
+    **Kwargs:**
+        .. note::
+            The kwargs for this are passed in from the command line options, and should
+            not need to be directly accessed.
+
+    """
 
     def __init__(self, **kwargs):
         self._yaml = None
@@ -36,6 +48,9 @@ class Config:
         self._set_defaults()
         
     def _set_defaults(self):
+        """ Set's default values for the necessities if not set from environment or 
+        as command line options.
+        """
         defaults = {
                 key.host: 'localhost',
                 key.port: '3141',
@@ -52,40 +67,73 @@ class Config:
         return True
 
     def url(self):
+        """ Set's up the url for the session, if not set via command line or environment
+        variables.
+
+        **Returns:**
+            * **String** of the url for this session.
+        """
         if self._url is None:
             return '{0}://{1}:{2}/'.format(self.scheme, self.host, self.port)
         return self._url
 
     def tmp_dir(self):
+        """ Creates a temporary directory, or returns one if exists, for this devpi-client
+        session.
+
+        **Returns:**
+            * **Path** to the tmp directory.
+        """
         if self._tmp_dir is None:
             self._tmp_dir = mkdtemp(prefix='devpi_')
             os.environ[environ_key.tmp_dir] = self._tmp_dir
         return self._tmp_dir
 
     def yaml(self):
+        """ A proxy for loading the config from a yaml file.  And reads any *global* settings.
+        If already read this session, then returns what's already in memory.
+
+        **Returns**:
+            * **None** if the config_path variable is not set for this config instance
+            * **Dict** of the yaml file at config_path.
+        """
         if self._yaml is None:
             if self.config_path is None:
                 print_if_debug(prefix='Config', message='{} not set'.format(key.config_path))
                 return None
             self._yaml = yaml_from_file(self.config_path)
+            self.load_direct('global')
         return self._yaml
 
     def load_directive(self, directive):
+        """ Loads a directive from the config file, and set's any relevent attributes on this
+        config instance, for the devpi-client session.
+
+        **Args:**
+            * **directive** (*str*):
+                A string mapped to a key in the yaml config file.  Loads the child keys for
+                this config instance.
+
+        **Returns:**
+            * **None**
+        """
         if self.yaml:
-            _globals = self.yaml().get('global')
             _directive = self.yaml().get(directive)
             if _directive is None:
                 print_if_debug(prefix='Config', message="Could not find config directive for '{}'"\
                     .format(directive))
-            
-            if _globals is not None:  
-                for k, v in _globals.items():
-                    setattr(self, k, v)
 
             for k, v in _directive.items():
                 setattr(self, k, v)
 
     def export(self):
+        """ Exports all the necessary environment variables, for the devpi-client session 
+        commands.
+
+
+        **Returns:**
+            * **True**
+        """
         for _key in key:
             env_key = getattr(environ_key, _key)
             value = getattr(self, _key, '')
