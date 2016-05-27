@@ -53,18 +53,7 @@ class Config:
 
     def url(self):
         if self._url is None:
-            index = self.index or '/'
-            if not index.startswith('/'):
-                index = '/' + index
-            print_if_debug(prefix='Config', message='Index: {}'.format(index))
-            print_if_debug(prefix='Config', message='User: {}, Password: {}'.format(
-                self.user, self.password))
-            if self.user and self.password:
-                print_if_debug(prefix='Config', message='Found username and pass')
-                return '{0}://{1}:{2}@{3}:{4}{5}'.format(
-                        self.scheme, self.user, self.password, self.host, self.port, index)
-            else:
-                return '{0}://{1}:{2}{3}'.format(self.scheme, self.host, self.port, index)
+            return '{0}://{1}:{2}/'.format(self.scheme, self.host, self.port)
         return self._url
 
     def tmp_dir(self):
