@@ -39,7 +39,7 @@ def is_non_empty_dir(path):
     return False
 
 def cleanup():
-    tmp_path = os.environ.get(environ_key.tmp_path, None)
+    tmp_path = os.environ.get(environ_key.tmp_dir, None)
     if tmp_path is not None:
         print_if_debug(prefix='Cleanup', message="Removing tmp path: '{}'".format(tmp_path))
         rmtree(tmp_path)
@@ -47,12 +47,11 @@ def cleanup():
     return True
 
 def prepare_for_commands(config):
-    tmp_path = mkdtemp(prefix='devpi')
-    os.environ[environ_key.tmp_path] = tmp_path
+    tmp_path = config.tmp_dir()
     tmp_certs = os.path.join(tmp_path, 'certs')
     print_if_debug(prefix='Prepare:Certs', message='tmp_certs: {}'.format(tmp_certs))
 
-    if is_non_empty_dir(config_instance.certs):
+    if is_non_empty_dir(config.certs):
         print_if_debug(prefix='Prepare:Certs', message='Copying Certs...')
         copytree(config.certs, tmp_certs, ignore=ignore_patterns('.DS_Store'))
 

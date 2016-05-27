@@ -1,55 +1,37 @@
 import click
 import os
 import sys
+import subprocess
+from time import sleep
 from .config import Config
-from .keys import EnvironKey
+from .environ_key import EnvironKey, environ_key
 from .helpers import print_if_debug, yaml_from_file, prepare_for_commands, cleanup
-
-config = Config()
 
 @click.group()
 def cli():
     pass
 
 @cli.command()
-@click.option('--host')
-@click.option('--port')
-@click.option('--index')
-@click.option('--config')
-@click.option('--directive')
-@click.option('--scheme')
-@click.option('--url')
-@click.option('--certs')
-@click.option('--password')
-@click.option('--username')
-@click.argument('commands', nargs=-1)
-def fire(host=None, port=None, index=None, config=None, directive=None, scheme=None, \
-        url=None, certs=None, password=None, username=None, commands='--help'):
+@click.option('--host', envvar=environ_key.host, default=None)
+@click.option('--port', envvar=environ_key.port, default=None)
+@click.option('--index', envvar=environ_key.index, default=None)
+@click.option('--config-path', envvar=environ_key.config_path, default=None)
+@click.option('--directive', default=None)
+@click.option('--scheme', envvar=environ_key.scheme, default=None)
+@click.option('--url', envvar=environ_key.url, default=None)
+@click.option('--certs', envvar=environ_key.certs, default=None)
+@click.option('--password', envvar=environ_key.password, default=None)
+@click.option('--username', envvar=environ_key.user, default=None)
+@click.option('--debug', envvar=environ_key.debug, default='1')
+@click.argument('devpi', nargs=-1)
+def fire(devpi, **kwargs):
 
     os.environ['DEBUG'] = '0'
+        
+    print_if_debug('Main', "Kwargs: '{}'".format(kwargs))
+    directive = kwargs.pop('directive', None)
+    config = Config(**kwargs)
 
-    config = Config()
-
-    
-    attrs = EnvironKey(
-            host=host,
-            port=port,
-            index=index,
-            config_path=config,
-            scheme=scheme,
-            certs=certs,
-            url=url,
-            password=password,
-            user=username,
-            requests_bundle=None,
-            pip_target=None,
-            tmp_path=None
-    )
-
-
-    for key, value in attrs._asdict().items():
-        if value is not None:
-            setattr(config, key, value)
 
     print_if_debug(prefix='Main', message='config.port: {}'.format(config.port))
 
@@ -57,7 +39,32 @@ def fire(host=None, port=None, index=None, config=None, directive=None, scheme=N
         config.load_directive(directive)
     
     prepare_for_commands(config)
+    
+    print_if_debug('Main', message="Devpi: '{}'".format(devpi))
+    if 'devpi' in devpi:
+        print_if_debug('Main', message="Devpi found")
+    else:
+        print_if_debug('Main', message="Devpi found")
+        devpi = ('devpi',) + devpi
 
+    if config.password is not None or config.password is not '':
+        print_if_debug('Main', message='Config has password')
+        if '--password' in devpi:
+            print_if_debug('Main', message='Devpi has password')
+        else:
+            print_if_debug('Main', message='Devpi does not have password')
+            devpi = devpi + ('--password', config.password)
+
+            # so it doesn't get exposed to the environment.
+            config.password = ''
+
+    else:
+        print_if_debug('Main', message='Config does not have password')
+
+    
+    config.export()
+    #subprocess.call(['sh', '/app/util/test.sh'])
+    subprocess.call(devpi)
 
     # cleanup before exit.
     cleanup()
@@ -66,13 +73,13 @@ def fire(host=None, port=None, index=None, config=None, directive=None, scheme=N
 
 
 @cli.command()
-def testing():
-    click.echo("The devpi url is: '{0}'".format(config.url))
+@click.option('--debug', default='1')
+@click.option('--host', default='localhost')
+@click.argument('devpi', nargs=-1)
+def testing(devpi, **kwargs):
     os.environ['DEBUG'] = '0'
-    print_if_debug(message="Loading yaml...")
 
-    data = config.yaml
-    print_if_debug(prefix='Config', message='Yaml: {}'.format(data))
-
-
+    print_if_debug(prefix='Testing', message='In testing')
+    print_if_debug(prefix='Testing', message='Kwargs: {}'.format(kwargs))
+    print_if_debug(prefix='Testing', message='Devpi: {}'.format(devpi))
 

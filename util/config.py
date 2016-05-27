@@ -1,98 +1,70 @@
 import os
 from collections import namedtuple
+from tempfile import mkdtemp
 from .helpers import yaml_from_file, print_if_debug
-from .environ_key import environ_key as key
+# fix this if config2 works
+from .environ_key import key, environ_key
 
 class Config:
-    
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self, **kwargs):
         self._yaml = None
+        self._url = None
+        self._tmp_dir = None
 
-    @property
-    def host(self):
-        return os.environ.get(key.host, 'localhost')
+        for _key in key:
+            # prefer kwarg over environ.
+            # see if key is in kwargs
+            attr = kwargs.get(_key)
+            if attr is None:
+                # try to get attr from the environ
+                try:
+                    env_key = getattr(environ_key, _key)
+                    attr = os.environ.get(env_key)
+                except AttributeError:
+                    pass
+            # set the attr (or None) on self for key
+            if _key is key.url:
+                self._url = attr
+            elif _key is key.tmp_dir:
+                self._tmp_dir = attr
+            else:
+                if attr is None:
+                    attr = ''
 
-    @host.setter
-    def host(self, value):
-        os.environ[key.host] = str(value)
-        return self.host
+                setattr(self, _key, attr)
 
-    @property
-    def port(self):
-        return os.environ.get(key.port, 3141)
+        self._set_defaults()
+        
+    def _set_defaults(self):
+        defaults = {
+                key.host: 'localhost',
+                key.port: '3141',
+                key.scheme: 'http',
+                key.certs: '/certs',
+                key.config_path: '/config/devpi.yml',
+        }
+        # set any default values that did not get set above.
+        for _key in defaults:
+            attr = getattr(self, _key, None)
+            if attr is None or attr == '':
+                setattr(self, _key, defaults[_key])
 
-    @port.setter
-    def port(self, value):
-        os.environ[key.port] = str(value)
-        return self.port
+        return True
 
 
-    @property
-    def scheme(self):
-        return os.environ.get(key.scheme, 'http')
 
-    @scheme.setter
-    def scheme(self, value):
-        os.environ[key.scheme] = str(value)
-        return self.scheme
-    
-    @property
-    def user(self):
-        return os.environ.get(key.user)
-
-    @user.setter
-    def user(self, value):
-        os.environ[key.user] = str(value)
-        return self.user
-
-    @property
-    def index(self):
-        return os.environ.get(key.index)
-
-    @index.setter
-    def index(self, value):
-        os.environ[key.index] = str(value)
-
-    @property
-    def config_path(self):
-        return os.environ.get(key.config_path, '/config/devpi.yml')
-
-    @config_path.setter
-    def config_path(self, value):
-        os.environ[key.config_path] = str(value)
-        return self.config_path
-
-    @property
-    def certs(self):
-        return os.environ.get(key.certs, '/certs')
-
-    @certs.setter
-    def certs(self, value):
-        os.environ[key.certs] = str(value)
-        return self.certs
-    
-    @property
     def url(self):
-        _url = os.environ.get(key.url)
-        if _url is None:
-            return '{0}://{1}:{2}'.format(self.scheme, self.host, self.port)
-        return _url
+        if self._url is None:
+            return '{0}://{1}:{2}/'.format(self.scheme, self.host, self.port)
+        return self._url
 
-    @url.setter
-    def url(self, value):
-        os.environ[key.url] = str(value)
-        return self.url
+    def tmp_dir(self):
+        if self._tmp_dir is None:
+            self._tmp_dir = mkdtemp(prefix='devpi_')
+            os.environ[environ_key.tmp_dir] = self._tmp_dir
+        return self._tmp_dir
 
-    @property
-    def password(self):
-        return os.environ.get(key.password)
-
-    @password.setter
-    def password(self, value):
-        os.environ[key.password] = str(value)
-        return self.password
-
-    @property
     def yaml(self):
         if self._yaml is None:
             if self.config_path is None:
@@ -103,10 +75,21 @@ class Config:
 
     def load_directive(self, directive):
         if self.yaml:
-            _directive = self.yaml.get(directive)
+            _directive = self.yaml().get(directive)
             if _directive is None:
                 print_if_debug(prefix='Config', message="Could not find config directive for '{}'"\
                     .format(directive))
 
             for k, v in _directive.items():
                 setattr(self, k, v)
+
+    def export(self):
+        for _key in key:
+            env_key = getattr(environ_key, _key)
+            value = getattr(self, _key, '')
+            if _key == 'url' or _key == 'tmp_dir' and value != '':
+                os.environ[env_key] = str(value())
+            else:
+                os.environ[env_key] = str(value)
+
+        return True
