@@ -64,9 +64,9 @@ def fire(devpi, **kwargs):
             subprocess.call(['devpi', 'use', config.index])
 
         if config.password:
-            if config.username:
+            if config.user:
                 print_if_debug('Main', 'Attempting login...')
-                subprocess.call(['devpi', 'login', config.username, '--password', \
+                subprocess.call(['devpi', 'login', config.user, '--password', \
                         config.password])
 
         #subprocess.call(['sh', '/app/util/test.sh'])
