@@ -47,21 +47,6 @@ def fire(devpi, **kwargs):
         print_if_debug('Main', message="Devpi found")
         devpi = ('devpi',) + devpi
 
-    if config.password is not None or config.password is not '':
-        print_if_debug('Main', message='Config has password')
-        if '--password' in devpi:
-            print_if_debug('Main', message='Devpi has password')
-        else:
-            print_if_debug('Main', message='Devpi does not have password')
-            devpi = devpi + ('--password', config.password)
-
-            # so it doesn't get exposed to the environment.
-            config.password = ''
-
-    else:
-        print_if_debug('Main', message='Config does not have password')
-
-    
     config.export()
     #subprocess.call(['sh', '/app/util/test.sh'])
     subprocess.call(devpi)
