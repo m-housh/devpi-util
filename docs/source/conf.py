@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # devpi-client-util documentation build configuration file, created by
-# sphinx-quickstart on Fri May 27 22:54:04 2016.
+# sphinx-quickstart on Fri May 27 23:02:30 2016.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
