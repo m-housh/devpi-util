@@ -48,6 +48,11 @@ def fire(devpi, **kwargs):
         devpi = ('devpi',) + devpi
 
     config.export()
+    # connect to devpi-server at the url
+    subprocess.call(['devpi', 'use', config.url()])
+    # connect to an index before issuing commands
+    if config.index is not None or config.index != '':
+        subprocess.call(['devpi', 'use', config.index])
     #subprocess.call(['sh', '/app/util/test.sh'])
     subprocess.call(devpi)
 

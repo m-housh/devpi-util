@@ -52,8 +52,6 @@ class Config:
 
         return True
 
-
-
     def url(self):
         if self._url is None:
             return '{0}://{1}:{2}/'.format(self.scheme, self.host, self.port)
