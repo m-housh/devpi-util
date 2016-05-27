@@ -15,7 +15,7 @@ def _is_debug():
     return False
 
 def print_if_debug(prefix='Main', message=None):
-    """ A utility wrapper for :py:method:`click.echo`.
+    """ A utility wrapper for :py:func:`click.echo`.
 
     Prints to the console if debug is True.
     Prints format: [prefix]=> message
