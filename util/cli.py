@@ -57,11 +57,11 @@ def fire(devpi, **kwargs):
         config.export()
         # connect to devpi-server at the url
         print_if_debug(prefix='Main', message='Connecting to devpi url: \'{}\''.format(config.url()))
-        subprocess.call(['devpi', 'use', config.url()])
+        subprocess.call(['devpi', 'use', config.url(), '1>&2>/dev/null'])
         # connect to an index before issuing commands
         if config.index:
             print_if_debug('Main', 'Connecting to index: \'{}\''.format(config.index))
-            subprocess.call(['devpi', 'use', config.index])
+            subprocess.call(['devpi', 'use', config.index, '1>&2>/dev/null'])
 
         if config.password:
             if config.user:
