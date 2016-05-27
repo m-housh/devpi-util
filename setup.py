@@ -5,7 +5,7 @@ dirname = os.path.dirname(os.path.realpath(__file__))
 version = {}
 
 with open(os.path.join(dirname, 'version.py')) as fp:
-    exec(fp.read, version)
+    exec(fp.read(), version)
 
 setup(
         name='devpi-client-util',
