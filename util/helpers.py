@@ -7,6 +7,16 @@ from tempfile import mkdtemp
 from .environ_key import environ_key
 import yaml
 
+
+def command(name=None, cls=None, **attrs):
+    if cls is None:
+        cls = click.Command
+    def decorator(f):
+        r = click.decorators._make_command(f, name, attrs, cls)
+        r.__doc__ = f.__doc__
+        return r
+    return decorator
+
 def _is_debug():
     """ Get debug from the environment and return True or False accordingly. """
     debug = os.environ.get('DEBUG', '1').lower()

@@ -12,14 +12,14 @@ import subprocess
 from time import sleep
 from .config import Config
 from .environ_key import EnvironKey, environ_key
-from .helpers import print_if_debug, yaml_from_file, prepare_for_commands, cleanup
+from .helpers import print_if_debug, yaml_from_file, prepare_for_commands, cleanup, command
 
 #:TODO get rid of the group and just have one command.
 @click.group()
 def cli():
     pass
 
-@cli.command()
+command()
 @click.option('--host', envvar=environ_key.host, default=None)
 @click.option('--port', envvar=environ_key.port, default=None)
 @click.option('--index', envvar=environ_key.index, default=None)
