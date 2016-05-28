@@ -61,7 +61,7 @@ def fire(devpi, **kwargs):
             however if a value is passed in with the 'url' option then that will be used
             instead.
 
-        * **--index** (*str*):
+        * **- -index** (*str*):
             This set's the devpi index to connect to for this session.
         * **--certs** (*str*):
             This set's a path for custom cert's for request validation's.  Used if using
@@ -82,8 +82,9 @@ def fire(devpi, **kwargs):
         This is not needed, if you are not passing options to devpi, but easier to get in
         the habit of using it.
 
-    **Example:**
-    ```bash
+    **Example:**  
+
+    ```
     $ docker run -it --rm \\
             -v "$PWD":/app \\
             -v "$PWD/config":/config \\
