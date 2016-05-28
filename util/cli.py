@@ -85,13 +85,13 @@ def fire(devpi, **kwargs):
     **Example:**  
         .. code:: bash
 
-            $ docker run -it --rm \
-                -v "$PWD":/app \
-                -v "$PWD/config":/config \
-                --link devpi-server \
-                mhoush/devpi-client-util \
-                --directive local \ # the config sub-key to use for this session
-                -- \ # everything following this is the devpi-client command's to use.
+            $ docker run -it --rm \\
+                -v "$PWD":/app \\
+                -v "$PWD/config":/config \\
+                --link devpi-server \\
+                mhoush/devpi-client-util \\
+                --directive local \\# the config sub-key to use for this session
+                -- \\ # everything following this is the devpi-client command's to use.
                 upload --with-docs
 
     
