@@ -19,7 +19,7 @@ from .helpers import print_if_debug, yaml_from_file, prepare_for_commands, clean
 def cli():
     pass
 
-command()
+@command()
 @click.option('--host', envvar=environ_key.host, default=None)
 @click.option('--port', envvar=environ_key.port, default=None)
 @click.option('--index', envvar=environ_key.index, default=None)

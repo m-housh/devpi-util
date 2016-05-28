@@ -23,7 +23,7 @@ setup(
         ],
         entry_points={
             'console_scripts': [
-                'devpi-client-util = util.cli:cli'
+                'devpi-client-util = util.cli:fire'
             ],
         },
 )
