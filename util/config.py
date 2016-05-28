@@ -102,7 +102,7 @@ class Config:
                 print_if_debug(prefix='Config', message='{} not set'.format(key.config_path))
                 return None
             self._yaml = yaml_from_file(self.config_path)
-            self.load_direct('global')
+            self.load_directive('global')
         return self._yaml
 
     def load_directive(self, directive):
