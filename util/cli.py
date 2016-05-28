@@ -33,8 +33,69 @@ def cli():
 @click.option('--debug', envvar=environ_key.debug, default='1')
 @click.argument('devpi', nargs=-1)
 def fire(devpi, **kwargs):
-    """ Our main command-line entrypoint for the app. """
+    """ Our main command-line entrypoint for the app. 
+    
+   **Options:**
+        * **--config-path** (*str*):
+            The path to the config (yaml) file that holds directives (sub-key's) for devpi
+            connections.
+        * **--directive** (*str*):
+            The sub-key to read from the config (yaml) file to use for this session.
 
+        .. note::
+            The following options are available, to override values in the config file,
+            or if a config file is not being used.
+
+        * **--host** (*str*):
+            This set's the devpi host for the session.
+        * **--port** (*str*):
+            This set's the devpi host's port for the session.
+        * **--scheme** (*str*):
+            This set's the scheme to use to build the url for this session. Defaults to 'http'.
+        * **--url** (*str*):
+            A full url for the session, this will override any of the options for ('scheme',
+            'host' and 'port').
+
+        .. note::
+            If a full url is not used then one will be built using 'scheme://host:port/',
+            however if a value is passed in with the 'url' option then that will be used
+            instead.
+
+        * **--index** (*str*):
+            This set's the devpi index to connect to for this session.
+        * **--certs** (*str*):
+            This set's a path for custom cert's for request validation's.  Used if using
+            self-signed certs for you devpi-server instance. Defaults to '/certs'. 
+        * **--username** (*str*):
+            This set's the devpi username for the session, if 'username' and 'password' options
+            are set then we will attempt a login (which can be required, depending on your
+            command and devpi-server setup)
+        * **--password** (*str*):
+            This set's the password for the devpi username for this session.
+        * **--debug** (*str*):
+           This set's debug for the session, which gives you some output while running this
+           script.
+
+    **Arguments:**
+        Due to the way args get parsed all 'OPTIONS' for the set-up of this script should be 
+        followed with '--' and everything after '--' get passed into devpi-client command.  
+        This is not needed, if you are not passing options to devpi, but easier to get in
+        the habit of using it.
+
+    **Example:**
+    ```bash
+    $ docker run -it --rm \\
+            -v "$PWD":/app \\
+            -v "$PWD/config":/config \\
+            --link devpi-server \\
+            mhoush/devpi-client-util \\
+            --directive local \\ # the config sub-key to use for this session
+            -- \\ # everything following this is the devpi-client command's to use.
+            upload --with-docs
+    ```
+
+    
+    """
     os.environ['DEBUG'] = '0'
         
     print_if_debug('Main', "Kwargs: '{}'".format(kwargs))
