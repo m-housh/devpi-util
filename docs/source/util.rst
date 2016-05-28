@@ -11,6 +11,7 @@ util.cli module
     :members:
     :undoc-members:
     :show-inheritance:
+.. autofunction:: util.cli.fire
 
 util.config module
 ------------------
