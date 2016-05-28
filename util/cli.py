@@ -36,23 +36,23 @@ def fire(devpi, **kwargs):
     """ Our main command-line entrypoint for the app. 
     
    **Options:**
-        * **--config-path** (*str*):
+        * **- -config-path** (*str*):
             The path to the config (yaml) file that holds directives (sub-key's) for devpi
             connections.
-        * **--directive** (*str*):
+        * **- -directive** (*str*):
             The sub-key to read from the config (yaml) file to use for this session.
 
         .. note::
             The following options are available, to override values in the config file,
             or if a config file is not being used.
 
-        * **--host** (*str*):
+        * **- -host** (*str*):
             This set's the devpi host for the session.
-        * **--port** (*str*):
+        * **- -port** (*str*):
             This set's the devpi host's port for the session.
-        * **--scheme** (*str*):
+        * **- -scheme** (*str*):
             This set's the scheme to use to build the url for this session. Defaults to 'http'.
-        * **--url** (*str*):
+        * **- -url** (*str*):
             A full url for the session, this will override any of the options for ('scheme',
             'host' and 'port').
 
@@ -63,16 +63,16 @@ def fire(devpi, **kwargs):
 
         * **- -index** (*str*):
             This set's the devpi index to connect to for this session.
-        * **--certs** (*str*):
+        * **- -certs** (*str*):
             This set's a path for custom cert's for request validation's.  Used if using
             self-signed certs for you devpi-server instance. Defaults to '/certs'. 
-        * **--username** (*str*):
+        * **- -username** (*str*):
             This set's the devpi username for the session, if 'username' and 'password' options
             are set then we will attempt a login (which can be required, depending on your
             command and devpi-server setup)
-        * **--password** (*str*):
+        * **- -password** (*str*):
             This set's the password for the devpi username for this session.
-        * **--debug** (*str*):
+        * **- -debug** (*str*):
            This set's debug for the session, which gives you some output while running this
            script.
 
@@ -83,17 +83,15 @@ def fire(devpi, **kwargs):
         the habit of using it.
 
     **Example:**  
-
-    ```
-    $ docker run -it --rm \\
-            -v "$PWD":/app \\
-            -v "$PWD/config":/config \\
-            --link devpi-server \\
-            mhoush/devpi-client-util \\
-            --directive local \\ # the config sub-key to use for this session
-            -- \\ # everything following this is the devpi-client command's to use.
+    .. code:: bash
+        $ docker run -it --rm \
+            -v "$PWD":/app \
+            -v "$PWD/config":/config \
+            --link devpi-server \
+            mhoush/devpi-client-util \
+            --directive local \ # the config sub-key to use for this session
+            -- \ # everything following this is the devpi-client command's to use.
             upload --with-docs
-    ```
 
     
     """
