@@ -32,7 +32,7 @@ def cli():
 @click.option('--username', envvar=environ_key.user, default=None)
 @click.option('--debug', envvar=environ_key.debug, default='1')
 @click.argument('devpi', nargs=-1)
-def fire(devpi, **kwargs):
+def main(devpi, **kwargs):
     """ Our main command-line entrypoint for the app. 
     
    **Options:**
@@ -148,18 +148,3 @@ def fire(devpi, **kwargs):
 
     # cleanup before exit.
     cleanup()
-
-
-
-
-@cli.command()
-@click.option('--debug', default='1')
-@click.option('--host', default='localhost')
-@click.argument('devpi', nargs=-1)
-def testing(devpi, **kwargs):
-    os.environ['DEBUG'] = '0'
-
-    print_if_debug(prefix='Testing', message='In testing')
-    print_if_debug(prefix='Testing', message='Kwargs: {}'.format(kwargs))
-    print_if_debug(prefix='Testing', message='Devpi: {}'.format(devpi))
-
