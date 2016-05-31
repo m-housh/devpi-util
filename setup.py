@@ -18,8 +18,8 @@ setup(
         packages=find_packages(),
         zip_safe=False,
         install_requires=[
-            'click',
-            'pyyaml',
+            'click==6.6',
+            'pyyaml==3.11',
         ],
         entry_points={
             'console_scripts': [
